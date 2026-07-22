@@ -294,7 +294,7 @@ class SalesSummaryApp:
             margin_typical_text = 'N/A' if r['margin_typical'] is None else f"{r['margin_typical'] * 100:.0f}%"
             tag = 'flag' if (r['margin_change'] is not None and r['margin_change'] <= -0.15) else ''
             tree.insert('', 'end', values=(
-                r['product'], f"{r['avg_discount'] * 100:.0f}%", f"${r['sales']:,.0f}",
+                r['label'], f"{r['avg_discount'] * 100:.0f}%", f"${r['sales']:,.0f}",
                 f"{r['margin_now'] * 100:.0f}%", margin_typical_text, r['impact_label'],
             ), tags=(tag,) if tag else ())
 

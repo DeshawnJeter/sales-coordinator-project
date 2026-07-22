@@ -1,0 +1,15 @@
+date,region,category,product,sales,discount,profit,store_id
+2026-07-13,East,Furniture,Office Chair,1200,0.05,360,STR-101
+2026-07-13,East,Technology,Laptop,2500,0.00,500,STR-102
+2026-07-14,East,Supplies,Printer Paper,320,0.00,96,STR-101
+2026-07-14,West,Furniture,Office Chair,1800,0.05,540,STR-201
+2026-07-15,West,Furniture,Standing Desk,2200,0.00,660,STR-201
+2026-07-15,West,Supplies,Printer Paper,300,0.00,90,STR-202
+2026-07-16,Central,Technology,Monitor,1600,0.10,320,STR-301
+2026-07-16,Central,Supplies,Stapler,220,0.00,66,STR-301
+2026-07-17,South,Supplies,Stapler,250,0.00,75,STR-401
+2026-07-17,South,Technology,Wireless Mouse,400,0.05,120,STR-401
+2026-07-18,South,Furniture,Bookshelf,700,0.00,210,STR-401
+2026-07-18,Central,Furniture,Office Chair,900,0.05,270,STR-301
+2026-07-19,East,Furniture,Office Chair,1150,0.05,345,STR-102
+2026-07-19,West,Technology,Wireless Mouse,380,0.05,114,STR-202

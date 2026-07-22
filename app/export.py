@@ -102,7 +102,7 @@ def _write_discount_sheet(wb, discount_rows):
                'Margin Change', 'Profit Impact vs. Prior Week']
     _write_header_row(ws, 1, headers)
     for i, r in enumerate(discount_rows, start=2):
-        ws.cell(row=i, column=1, value=r['product'])
+        ws.cell(row=i, column=1, value=r['label'])
         ws.cell(row=i, column=2, value=f"{_pct(r['avg_discount'])}%")
         ws.cell(row=i, column=3, value=round(r['sales'], 2))
         ws.cell(row=i, column=4, value=f"{_pct(r['margin_now'])}%")

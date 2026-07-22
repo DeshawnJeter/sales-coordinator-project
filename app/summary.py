@@ -104,38 +104,45 @@ def product_summary(current_df, prior_df, has_prior_data):
 
 def discount_summary(current_df, prior_df, historical_df, has_prior_data, top_n=TOP_DISCOUNTED_COUNT):
     """Top discounted products this period, with margin vs. their typical (historical) margin
-    and a profit gain/loss call vs. the prior period."""
+    and a profit gain/loss call vs. the prior period.
+
+    Grouped by (product, region) rather than product alone — a regional discount campaign
+    (e.g. a "Spring Sale" run only in one region) would otherwise get averaged away by the
+    same product selling at a normal price elsewhere.
+    """
     if current_df.empty:
         return []
 
-    current_grouped = current_df.groupby('product').agg(
+    group_cols = ['product', 'region']
+    current_grouped = current_df.groupby(group_cols).agg(
         sales=('sales', 'sum'), profit=('profit', 'sum'), discount=('discount', 'mean')
     )
     discounted = current_grouped[current_grouped['discount'] > 0].copy()
     if discounted.empty:
         return []
 
-    prior_grouped = prior_df.groupby('product').agg(sales=('sales', 'sum'), profit=('profit', 'sum'))
-    historical_grouped = historical_df.groupby('product').agg(sales=('sales', 'sum'), profit=('profit', 'sum'))
+    prior_grouped = prior_df.groupby(group_cols).agg(sales=('sales', 'sum'), profit=('profit', 'sum'))
+    historical_grouped = historical_df.groupby(group_cols).agg(sales=('sales', 'sum'), profit=('profit', 'sum'))
 
     results = []
-    for product, row in discounted.iterrows():
+    for (product, region), row in discounted.iterrows():
         sales = float(row['sales'])
         profit = float(row['profit'])
         margin_now = (profit / sales) if sales != 0 else 0.0
 
-        has_history = product in historical_grouped.index and historical_grouped.loc[product, 'sales'] != 0
+        key = (product, region)
+        has_history = key in historical_grouped.index and historical_grouped.loc[key, 'sales'] != 0
         margin_typical = None
         margin_change = None
         if has_history:
-            hist_sales = float(historical_grouped.loc[product, 'sales'])
-            hist_profit = float(historical_grouped.loc[product, 'profit'])
+            hist_sales = float(historical_grouped.loc[key, 'sales'])
+            hist_profit = float(historical_grouped.loc[key, 'profit'])
             margin_typical = hist_profit / hist_sales
             if margin_typical != 0:
                 margin_change = (margin_now - margin_typical) / abs(margin_typical)
 
-        had_prior = has_prior_data and product in prior_grouped.index
-        prior_profit = float(prior_grouped.loc[product, 'profit']) if had_prior else None
+        had_prior = has_prior_data and key in prior_grouped.index
+        prior_profit = float(prior_grouped.loc[key, 'profit']) if had_prior else None
         profit_change_abs = (profit - prior_profit) if had_prior else None
 
         if profit_change_abs is None:
@@ -147,6 +154,8 @@ def discount_summary(current_df, prior_df, historical_df, has_prior_data, top_n=
 
         results.append({
             'product': product,
+            'region': region,
+            'label': f"{product} ({region})",
             'avg_discount': float(row['discount']),
             'sales': sales,
             'profit': profit,
@@ -183,7 +192,7 @@ def build_flags(category_rows, region_rows, store_rows, product_rows, discount_r
         if r['margin_change'] is not None and r['margin_change'] <= -MARGIN_DECLINE_THRESHOLD:
             flags.append({
                 'kind': 'margin',
-                'name': r['product'],
+                'name': r['label'],
                 'change': r['margin_change'],
                 'margin_now': r['margin_now'],
                 'margin_typical': r['margin_typical'],

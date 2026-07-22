@@ -1,0 +1,8 @@
+date,region,category,product,sales,discount,profit,store_id
+2026-07-20,East,Furniture,Office Chair,1250,0.05,375,STR-101
+2026-07-20,East,Technology,Laptop,2600,0.00,520,STR-102
+2026-07-21,East,Supplies,Printer Paper,330,0.00,99,STR-101
+2026-07-22,Central,Technology,Monitor,1500,0.10,300,STR-301
+2026-07-22,Central,Supplies,Stapler,230,0.00,69,STR-301
+2026-07-23,Central,Furniture,Office Chair,920,0.05,276,STR-301
+2026-07-24,East,Furniture,Office Chair,1180,0.05,354,STR-102
